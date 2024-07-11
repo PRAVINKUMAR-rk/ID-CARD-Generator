@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Card Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0066CC; /* Indian cricket team blue */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #FFFFFF; /* White */
+            border-radius: 8px;
+            
+        }
+        
+
+        h1 {
+            text-align: center;
+            color: #0066CC; /* Indian cricket team blue */
+        }
+
+        input, button {
+            display: block;
+            width: calc(100% - 20px); /* Adjusted width */
+            margin: 10px auto; /* Centered horizontally */
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #0066CC; /* Indian cricket team blue */
+            border-radius: 4px;
+        }
+
+        input {
+            background-color: #F0F0F0; /* Light gray */
+        }
+
+        button {
+            background-color: #0066CC; /* Indian cricket team blue */
+            color: #FFFFFF; /* White */
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        #preview {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 20px;
+        }
+
+        #logoContainer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .temp
+        {
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ID Card Generator</h1>
+        <!-- Input fields for user information -->
+         <label>Name</label>
+        <input type="text" id="name" placeholder="Enter Name">
+        <label>Mobile Number</label>
+        <input type="text" id="phoneNumber" placeholder="Enter Phone Number">
+        <label>Address</label>
+        <input type="text" id="address" placeholder="Enter Address">
+        <label>Date of Birth</label>
+        <input type="date" id="dob" placeholder="Enter Date of Birth">
+        
+        <label>Department</label>
+        <input type="text" id="dept" placeholder="Enter your department">
+        <!-- Logo upload -->
+        <div id="logoContainer">
+            <label style="float: left;">Post your Image(png/jpg)</label>
+            <input type="file" id="image" accept="image/*">
+        </div>
+        <!-- Button to generate ID card -->
+         <div class="temp">
+        <button onclick="DownloadIDCard()"> Download ID Card (PNG)</button>
+        <!-- Preview area for displaying the generated ID card -->
+    </div>
+    </div>
+<script>
+    function DownloadIDCard() {
+    var name = document.getElementById("name").value;
+    var phoneNumber = document.getElementById("phoneNumber").value;
+    var address = document.getElementById("address").value;
+    var dob = document.getElementById("dob").value;
+    var blood=document.getElementById("bg").value;
+    var dept=document.getElementById("dept").value;
+    var image = document.getElementById("image").files[0];
+
+    // Check if a file is selected and if it's either jpg or png
+    if (image && (image.type === 'image/jpeg' || image.type === 'image/png')) {
+        // Create a canvas element
+        var canvas = document.createElement('canvas');
+        canvas.width = 400; // Adjust canvas width as needed
+        canvas.height = 520; // Adjust canvas height as needed
+        var ctx = canvas.getContext('2d');
+
+        // Fill canvas with white background
+        ctx.fillStyle = '#FFFFFF'; // White
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Set header background color to blue
+        ctx.fillStyle = '#0066CC'; /* Indian cricket team blue */
+        ctx.fillRect(0, 0, canvas.width, 60);
+
+        // Set footer background color to blue
+        ctx.fillStyle = '#0066CC'; /* Indian cricket team blue */
+        ctx.fillRect(0, canvas.height - 40, canvas.width, 40);
+
+        // Set text color to white for header and footer
+        ctx.fillStyle = '#FFFFFF'; /* White */
+
+        // Set text alignment to center for header and footer
+        ctx.textAlign = 'center';
+
+        // Draw header text
+        ctx.font = 'bold 24px Arial';
+        ctx.fillText('IDENTITY CARD', canvas.width / 2, 30);
+
+        // Load logo image
+        var logoImg = new Image();
+        logoImg.src = URL.createObjectURL(image);
+        logoImg.onload = function () {
+            // Calculate photo position to align in center above the name
+            var photoX = (canvas.width - 200) / 2; // Assuming passport photo size is 200x200
+            var photoY = 80;
+
+            // Draw logo image on canvas
+            ctx.drawImage(logoImg, photoX, photoY, 200, 200); // Adjust size as needed
+
+            // Set text color to black for inside text
+            ctx.fillStyle = '#000000'; /* Black */
+
+            // Draw main data
+            ctx.font = '18px Arial';
+            ctx.fillText('Name: ' + name, canvas.width / 2, 320); // Adjust position as needed
+            ctx.fillText('Phone Number: ' + phoneNumber, canvas.width / 2, 350); // Adjust position as needed
+            ctx.fillText('Address: ' + address, canvas.width / 2, 380); // Adjust position as needed
+            ctx.fillText('Date of Birth: ' + dob, canvas.width / 2, 410); // Adjust position as needed
+            
+
+            // Draw footer text indicating it's a temporary ID card
+            ctx.font = 'italic 14px Arial';
+            ctx.fillStyle = '#FFFFFF'; /* White */
+            ctx.fillText(dept, canvas.width / 2, canvas.height - 15);
+
+            // Convert canvas to image
+            var imgData = canvas.toDataURL('image/png');
+
+            // Create a download link
+            var a = document.createElement("a");
+            a.href = imgData;
+            a.download = "id_card.png";
+            a.click();
+        };
+    } else {
+        alert('Please select a valid image file (jpg or png)');
+    }
+}
+
+</script>
+</body>
+</html>
